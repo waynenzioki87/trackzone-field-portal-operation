@@ -71,7 +71,7 @@ function Login() {
           {mode === "register" && <div className="mb-3"><label className="form-label">Full name</label><input className="form-control" name="name" value={form.name} onChange={update} required /></div>}
           <div className="mb-3"><label className="form-label">Email address</label><input type="email" className="form-control" name="email" value={form.email} onChange={update} required /></div>
           <div className="mb-3"><label className="form-label">Password</label><input type="password" className="form-control" name="password" value={form.password} onChange={update} minLength={mode === "register" ? 8 : undefined} required /></div>
-          {mode === "register" && <div className="mb-3"><label className="form-label">Role</label><select className="form-select" name="role" value={form.role} onChange={update}><option>Owner</option><option>Admin</option><option>Dispatcher</option><option>Technician</option></select></div>}
+          {mode === "register" && <div className="mb-3"><label className="form-label">Role</label><select className="form-select" name="role" value={form.role} onChange={update}><option>Dispatcher</option><option>Technician</option></select></div>}
           <button className="btn btn-primary w-100" disabled={loading}>{loading ? "Please wait..." : mode === "login" ? "Login" : "Create account"}</button>
         </form>
         {mode === "login" && <div className="d-flex justify-content-between"><button type="button" className="btn btn-link btn-sm mt-2" onClick={forgotPassword}>Forgot password?</button><button type="button" className="btn btn-link btn-sm mt-2" onClick={resend}>Resend verification email</button></div>}

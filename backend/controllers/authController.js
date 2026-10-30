@@ -21,7 +21,9 @@ const registerUser = async (req, res) => {
     if (password.length < 8) return res.status(400).json({ message: "Password must be at least 8 characters" });
     const normalizedEmail = email.trim().toLowerCase();
     if (await User.findOne({ email: normalizedEmail })) return res.status(409).json({ message: "An account with this email already exists" });
-    const user = await User.create({ name: name.trim(), email: normalizedEmail, password: await bcrypt.hash(password, 10), role: role || "Technician" });
+    const allowedRegistrationRoles = ["Dispatcher", "Technician"];
+    const registrationRole = allowedRegistrationRoles.includes(role) ? role : "Technician";
+    const user = await User.create({ name: name.trim(), email: normalizedEmail, password: await bcrypt.hash(password, 10), role: registrationRole });
     const verification = await issueVerification(user);
     res.status(201).json({
       message: "Account created. Check your email to verify it.",
