@@ -29,11 +29,18 @@ function CreateJob() {
     });
   };
 
+  const selectedTechnician = technicians.find(
+    (technician) => technician.name === job.assignedTechnician
+  );
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/api/jobs", job);
+      const response = await axios.post("http://localhost:5000/api/jobs", {
+        ...job,
+        status: job.assignedTechnician ? "Assigned" : "Pending",
+      });
 
       alert("✅ Job Created Successfully!");
 
@@ -250,9 +257,24 @@ function CreateJob() {
                   >
                     <option value="">Select Technician</option>
                     {technicians.map((technician) => (
-                      <option key={technician._id} value={technician.name}>{technician.name}</option>
+                      <option key={technician._id} value={technician.name}>
+                        {technician.name} — {technician.email}
+                      </option>
                     ))}
                   </select>
+                  {selectedTechnician && (
+                    <div className="border rounded bg-light p-3 mt-2">
+                      <div className="fw-semibold mb-1">Selected technician</div>
+                      <div>{selectedTechnician.name}</div>
+                      <small className="text-muted d-block">{selectedTechnician.email}</small>
+                      <small className={selectedTechnician.isEmailVerified ? "text-success" : "text-warning"}>
+                        {selectedTechnician.isEmailVerified ? "Email verified" : "Email not verified"}
+                      </small>
+                      <div className="small mt-2">
+                        This technician will receive the job in their dashboard and an assignment email.
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

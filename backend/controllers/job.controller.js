@@ -45,7 +45,9 @@ const getJobById = async (req, res) => {
 // Create a new job
 const createJob = async (req, res) => {
   try {
-    const job = await Job.create(req.body);
+    const jobData = { ...req.body };
+    if (jobData.assignedTechnician) jobData.status = "Assigned";
+    const job = await Job.create(jobData);
 
     await notifyAssignedTechnician(job);
     res.status(201).json(job);
@@ -58,7 +60,15 @@ const createJob = async (req, res) => {
 // Update a job by ID
 const updateJob = async (req, res) => {
   try {
-    const job = await Job.findByIdAndUpdate(req.params.id, req.body, {
+    const updates = { ...req.body };
+    if (updates.assignedTechnician && updates.status === "Pending") {
+      updates.status = "Assigned";
+    }
+    if (!updates.assignedTechnician && updates.status === "Assigned") {
+      updates.status = "Pending";
+    }
+
+    const job = await Job.findByIdAndUpdate(req.params.id, updates, {
       new: true,
       runValidators: true,
     });
